@@ -1,0 +1,35 @@
+# WordPress core
+/wp-admin/
+/wp-includes/
+
+# Configuración y credenciales
+wp-config.php
+
+# Archivos subidos por usuarios
+/wp-content/uploads/
+
+# Cache
+/wp-content/cache/
+/wp-content/*cache*
+/cache/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Variables de entorno
+.env
+.env.*
+
+# Backups
+*.sql
+*.zip
+*.tar
+*.gz
