@@ -25,3 +25,7 @@ Thumbs.db
 *.zip
 *.tar
 *.gz
+
+# Se conserva el respaldo sanitizado necesario para recrear la tienda.
+!database/
+!database/wp-computer-store.sql
