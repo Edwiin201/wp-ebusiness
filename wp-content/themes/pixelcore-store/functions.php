@@ -85,6 +85,16 @@ add_filter( 'woocommerce_output_related_products_args', static function ( array 
 add_filter( 'woocommerce_product_add_to_cart_text', static fn() => 'Agregar al carrito' );
 add_filter( 'woocommerce_product_single_add_to_cart_text', static fn() => 'Agregar al carrito' );
 
+/* Convierte las rutas guardadas originalmente en /wordpress/ a la URL real de cada instalación. */
+add_filter( 'the_content', static function ( string $content ): string {
+	$base_url = trailingslashit( home_url( '/' ) );
+	return str_replace(
+		[ 'href="/wordpress/', "href='/wordpress/" ],
+		[ 'href="' . esc_url( $base_url ), "href='" . esc_url( $base_url ) ],
+		$content
+	);
+}, 20 );
+
 add_filter( 'gettext', static function ( string $translated, string $text, string $domain ): string {
 	if ( 'woocommerce' !== $domain ) {
 		return $translated;

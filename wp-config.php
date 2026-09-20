@@ -89,6 +89,31 @@ define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
+/*
+ * Detecta automáticamente la URL local según la carpeta donde se haya
+ * descargado el proyecto (por ejemplo /wordpress o /wp-ebusiness).
+ * En consola no se define para no interferir con WP-CLI ni tareas programadas.
+ */
+if ( isset( $_SERVER['HTTP_HOST'], $_SERVER['DOCUMENT_ROOT'] ) ) {
+	$pixelcore_document_root = realpath( (string) $_SERVER['DOCUMENT_ROOT'] );
+	$pixelcore_project_root  = realpath( __DIR__ );
+
+	if ( false !== $pixelcore_document_root && false !== $pixelcore_project_root ) {
+		$pixelcore_document_root = str_replace( '\\', '/', $pixelcore_document_root );
+		$pixelcore_project_root  = str_replace( '\\', '/', $pixelcore_project_root );
+
+		if ( str_starts_with( strtolower( $pixelcore_project_root ), strtolower( $pixelcore_document_root ) ) ) {
+			$pixelcore_path   = substr( $pixelcore_project_root, strlen( $pixelcore_document_root ) );
+			$pixelcore_path   = '/' . trim( $pixelcore_path, '/' );
+			$pixelcore_scheme = ! empty( $_SERVER['HTTPS'] ) && 'off' !== strtolower( (string) $_SERVER['HTTPS'] ) ? 'https' : 'http';
+			$pixelcore_url    = $pixelcore_scheme . '://' . $_SERVER['HTTP_HOST'] . ( '/' === $pixelcore_path ? '' : $pixelcore_path );
+
+			define( 'WP_HOME', $pixelcore_url );
+			define( 'WP_SITEURL', $pixelcore_url );
+		}
+	}
+}
+
 
 
 /* That's all, stop editing! Happy publishing. */
