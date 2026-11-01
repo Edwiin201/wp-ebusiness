@@ -16,9 +16,15 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Variables de entorno
+# Variables de entorno y credenciales privadas
 .env
 .env.*
+/wp-content/private/*
+!/wp-content/private/gmail-creds.json.example
+
+# Composer local binaries
+/composer.phar
+/composer-setup.php
 
 # Backups
 *.sql

@@ -1,0 +1,14 @@
+{
+  "name": "custom/gmail-woocommerce-notifier",
+  "description": "Send Gmail notifications on WooCommerce order completion",
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=7.4",
+    "google/apiclient": "^2.14"
+  },
+  "autoload": {
+    "psr-4": {
+      "GmailWooNotifier\\": "src/"
+    }
+  }
+}
