@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelCore Analytics
  * Description: Google Analytics 4 for the published PixelCore storefront.
- * Version: 1.0.2
+ * Version: 1.0.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function pixelcore_public_analytics_is_enabled(): bool {
-	return ! is_admin() && '20.106.154.224' === wp_parse_url( home_url(), PHP_URL_HOST );
+	$host = wp_parse_url( home_url(), PHP_URL_HOST );
+	return ! is_admin() && ! empty( $host )
+		&& ! in_array( $host, array( 'localhost', '127.0.0.1', '::1', '[::1]' ), true );
 }
 
 function pixelcore_public_analytics_tag( string $confirmation_url = '' ): void {
