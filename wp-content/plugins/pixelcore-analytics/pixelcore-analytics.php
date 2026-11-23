@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelCore Analytics
  * Description: Google Analytics 4 for the published PixelCore storefront.
- * Version: 1.0.3
+ * Version: 1.0.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,8 +25,19 @@ function pixelcore_public_analytics_tag( string $confirmation_url = '' ): void {
 	function gtag() { window.dataLayer.push(arguments); }
 	gtag('js', new Date());
 	{
-		const config = {
-            page_location: location.origin + location.pathname
+		const pageUrl = new URL(location.href);
+        const campaignParams = new URLSearchParams();
+        const allowedCampaignParams = [
+            'utm_source', 'utm_medium', 'utm_campaign', 'utm_id',
+            'utm_content', 'utm_term', 'utm_source_platform'
+        ];
+        for (const name of allowedCampaignParams) {
+            const value = pageUrl.searchParams.get(name);
+            if (value) campaignParams.set(name, value);
+        }
+        const query = campaignParams.toString();
+        const config = {
+            page_location: pageUrl.origin + pageUrl.pathname + (query ? '?' + query : '')
         };
 		if (document.referrer) {
 			const referrer = new URL(document.referrer);
