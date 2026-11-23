@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelCore Analytics
  * Description: Google Analytics 4 for the published PixelCore storefront.
- * Version: 1.0.4
+ * Version: 1.0.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,10 +19,16 @@ function pixelcore_public_analytics_tag( string $confirmation_url = '' ): void {
 	$measurement_id = 'G-MLVVSB2ZBK';
 	$tag_url = 'https://www.googletagmanager.com/gtag/js?id=' . $measurement_id;
 	?>
-	<script async referrerpolicy="no-referrer" src="<?php echo esc_url( $tag_url ); ?>"></script>
 	<script>
 	window.dataLayer = window.dataLayer || [];
 	function gtag() { window.dataLayer.push(arguments); }
+	// Define advertising consent before initialization or any measurement events.
+	// Analytics storage keeps the site's existing setting; no advertising consent is granted.
+	gtag('consent', 'default', {
+		ad_storage: 'denied',
+		ad_user_data: 'denied',
+		ad_personalization: 'denied'
+	});
 	gtag('js', new Date());
 	{
 		const pageUrl = new URL(location.href);
@@ -51,6 +57,7 @@ function pixelcore_public_analytics_tag( string $confirmation_url = '' ): void {
 		gtag('config', <?php echo wp_json_encode( $measurement_id ); ?>, config);
 	}
 	</script>
+	<script async referrerpolicy="no-referrer" src="<?php echo esc_url( $tag_url ); ?>"></script>
 	<?php
 }
 
