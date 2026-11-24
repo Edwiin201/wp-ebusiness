@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelCore Analytics
  * Description: Google Analytics 4 for the published PixelCore storefront.
- * Version: 1.0.5
+ * Version: 1.0.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -119,6 +119,24 @@ add_action( 'wp_footer', static function () {
 		return;
 	}
 
+	$product_view = null;
+	if ( function_exists( 'is_product' ) && is_product() ) {
+		$product = wc_get_product( get_queried_object_id() );
+		if ( $product ) {
+			$price = (float) wc_get_price_excluding_tax( $product );
+			$product_view = array(
+				'currency' => get_woocommerce_currency(),
+				'value' => $price,
+				'items' => array( array(
+					'item_id' => (string) $product->get_id(),
+					'item_name' => $product->get_name(),
+					'price' => $price,
+					'quantity' => 1,
+				) ),
+			);
+		}
+	}
+
 	$session = function_exists( 'WC' ) ? WC()->session : null;
 	$events = $session ? $session->get( 'pixelcore_public_analytics_cart_events', array() ) : array();
 	if ( $events ) {
@@ -145,6 +163,8 @@ add_action( 'wp_footer', static function () {
 	?>
 	<script>
 	(() => {
+		const productView = <?php echo wp_json_encode( $product_view, JSON_HEX_TAG ); ?>;
+		if (productView) gtag('event', 'view_item', productView);
 		const checkoutEvent = <?php echo wp_json_encode( $checkout_event, JSON_HEX_TAG ); ?>;
         if (checkoutEvent) gtag('event', 'begin_checkout', checkoutEvent);
         const sendCartEvent = (event) => gtag('event', 'add_to_cart', event);
